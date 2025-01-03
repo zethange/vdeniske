@@ -56,7 +56,6 @@ export const CreatePost = (props: {
     };
     input.click();
   };
-
   const onPaste = (e: ClipboardEvent) => {
     const items = e.clipboardData?.items;
     if (!items) return;
@@ -98,7 +97,6 @@ export const CreatePost = (props: {
       }
     }
   };
-
   return (
     <>
       <Show when={currentUser()}>
@@ -111,7 +109,7 @@ export const CreatePost = (props: {
                     class="relative aspect-[4/3] overflow-hidden cursor-pointer"
                     onClick={() =>
                       setAttachments((prev) =>
-                        prev.filter((f) => f.name != preview.filename),
+                        prev.filter((f) => f.name != preview.filename)
                       )
                     }
                   >
@@ -135,7 +133,7 @@ export const CreatePost = (props: {
             }
             onPaste={onPaste}
             onDragOver={onDragOver}
-            onDrop={onDrop}
+            onDrop={onDrop}          
           ></textarea>
           <div class="absolute right-2 bottom-4 text-white flex gap-1 items-center">
             <button onClick={addAttachment}>

@@ -25,7 +25,7 @@ export const Post: Component<{ post: PostType; refetch: () => void }> = (
   return (
     <div class="text-white p-3 border-b border-zinc-900">
       <div class="flex gap-2">
-        <A href={`/users/${props.post.author[0].id}`}>
+        <A href={`/users/${props.post.author[0].username}`}>
           <img
             src={props.post.author[0].avatar}
             alt={props.post.author[0].name}
@@ -33,7 +33,7 @@ export const Post: Component<{ post: PostType; refetch: () => void }> = (
           />
         </A>
         <div>
-          <A href={`/users/${props.post.author[0].id}`}>
+          <A href={`/users/${props.post.author[0].username}`}>
             <div class="flex items-center gap-2">
               <div class="flex gap-2 items-center">
                 <span class="font-bold text-md">

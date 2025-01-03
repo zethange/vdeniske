@@ -8,7 +8,6 @@ const conf = new Configuration(
   import.meta.env.PROD
     ? "https://vdeniske.ru/api/v1"
     : "https://vdeniske.ru/api/v1"
-  // : "http://localhost:3000/api/v1"
 );
 
 const turnstyleSiteKey = "0x4AAAAAAA4DcwcJXshKBpkU";

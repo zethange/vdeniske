@@ -53,12 +53,12 @@ export class PostController {
     return data;
   }
 
-  async getPostsByUserId(
-    userId: string,
+  async getPostsByUsername(
+    username: string | undefined,
     page: number
   ): Promise<Pageable<Post>> {
     const res = await fetch(
-      `${this.config.basePath}/users/${userId}/posts?page_size=15&page_number=${page}&search`
+      `${this.config.basePath}/users/${username}/posts?page_size=15&page_number=${page}&search`
     );
 
     if (!res.ok) {

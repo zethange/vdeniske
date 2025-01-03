@@ -1,6 +1,6 @@
 use super::dto::UpdateUserReq;
-use super::service::{get_user_by_id, get_users, update_avatar, update_user};
-use crate::post::service::get_posts_by_user_id;
+use super::service::{get_user_by_id, get_user_by_username, get_users, update_avatar, update_user};
+use crate::post::service::{get_posts_by_user_id, get_posts_by_username};
 use crate::user::entity::User;
 use crate::{auth::middleware::auth, utils::PaginationReq};
 use axum::routing::put;
@@ -24,8 +24,9 @@ pub fn user_router() -> Router {
         .route_layer(middleware::from_fn(auth))
         // without auth
         .route("/", get(get_users_route))
-        .route("/:id", get(get_user_by_id_route))
-        .route("/:id/posts", get(get_posts_by_user_id_route));
+        // .route("/:id", get(get_user_by_id_route))
+        .route("/:username", get(get_user_by_username_route))
+        .route("/:username/posts", get(get_posts_by_username_route));
 
     router
 }
@@ -41,6 +42,29 @@ async fn get_user_by_id_route(
 ) -> impl IntoResponse {
     let user = get_user_by_id(&db, Uuid::from_str(id.as_str()).unwrap()).await;
     Json(user)
+}
+async fn get_user_by_username_route(
+    Extension(db): Extension<Pool<Postgres>>,
+    Path(username): Path<String>,
+) -> impl IntoResponse{
+    let user = get_user_by_username(&db, username).await;
+    Json(user)
+}
+
+async fn get_posts_by_username_route(
+    Extension(db): Extension<Pool<Postgres>>,
+    Path(id): Path<String>,
+    Query(pagination): Query<PaginationReq>,
+) -> impl IntoResponse {
+    let posts = get_posts_by_username(
+        &db,
+        &id,
+        pagination.page_size,
+        pagination.page_number,
+    )
+    .await;
+
+    Json(posts)
 }
 
 async fn get_posts_by_user_id_route(

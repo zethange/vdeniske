@@ -8,15 +8,15 @@ import { UpdateUserModal } from "../features/user";
 import { postApi, userApi } from "../shared/lib/api";
 
 export const UserPage = () => {
-  const { userId } = useParams();
+  const { username } = useParams();
   const currentUser = useStore($currentUser);
   const [user, { refetch }] = createResource(() => {
-    return userApi.getUser(userId);
+    return userApi.getUser(username);
   });
 
   const [loading, setLoading] = createSignal(false);
   const [posts, { mutate }] = createResource(() => {
-    return postApi.getPostsByUserId(userId, 1);
+    return postApi.getPostsByUsername(username, 1);
   });
 
   const refetchPost = async (id: string) => {
@@ -72,7 +72,7 @@ export const UserPage = () => {
     page++;
 
     setLoading(true);
-    const newPosts = await postApi.getPostsByUserId(userId, page);
+    const newPosts = await postApi.getPostsByUsername(username, page);
 
     mutate((prev) => {
       const prevClone = structuredClone(prev);

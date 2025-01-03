@@ -14,8 +14,8 @@ export type UpdateUserReq = {
 export class UserController {
   constructor(private config: Configuration) {}
 
-  async getUser(userId: string): Promise<User | undefined> {
-    const res = await fetch(`${this.config.basePath}/users/${userId}`);
+  async getUser(username: string): Promise<User | undefined> {
+    const res = await fetch(`${this.config.basePath}/users/${username}`);
 
     if (!res.ok) {
       throw new Error(await res.text());

@@ -110,6 +110,51 @@ pub async fn create_post(
     Ok(get_post_by_id(db, post.0).await.unwrap())
 }
 
+pub async fn get_posts_by_username(
+    db: &Pool<Postgres>,
+    username: &String,
+    page_size: i64,
+    page_number: i64,
+) -> Pageable<Vec<Post>> {
+    let offset = page_size * (page_number - 1);
+
+    let posts = sqlx::query_as::<_, Post>(
+        r#"
+        SELECT p.*,
+               (SELECT json_agg(u.*) FROM users u WHERE u.id = p.user_id) as author,
+               COALESCE((SELECT json_agg(a.*) FROM attachments a WHERE a.post_id = p.id), '[]'::json) as attachments,
+               (SELECT count(*) FROM post_likes WHERE post_id = p.id) as likes,
+               (SELECT count(*) FROM post_dislikes WHERE post_id = p.id) as dislikes,
+               (SELECT count(*) FROM posts WHERE reply_to = p.id) as replies
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        WHERE u.username = $1 AND p.reply_to IS NULL
+        GROUP BY p.id, p.content, p.user_id, p.created_at
+        ORDER BY p.created_at DESC
+        LIMIT $2 OFFSET $3
+        "#,
+    )
+    .bind(username)
+    .bind(page_size)
+    .bind(offset)
+    .fetch_all(db)
+    .await
+    .unwrap();
+
+    let row: (i64,) = sqlx::query_as("SELECT COUNT(p.*) FROM posts p JOIN users u ON p.user_id = u.id WHERE u.username = $1")
+        .bind(username)
+        .fetch_one(db)
+        .await
+        .unwrap();
+
+    Pageable {
+        content: posts,
+        page_size,
+        page_number,
+        last_page: (row.0 as f64 / page_size as f64).ceil() as i64,
+    }
+}
+
 pub async fn get_posts_by_user_id(
     db: &Pool<Postgres>,
     user_id: Uuid,

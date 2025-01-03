@@ -35,7 +35,7 @@ export const MainLayout: Component<ParentProps> = (props) => {
         </Show>
         <Show when={user()}>
           <A
-            href={`/users/${user()?.id}`}
+            href={`/users/${user()?.username}`}
             class="bg-zinc-800 rounded-full aspect-square px-4 py-2"
           >
             {user()?.name[0]}
