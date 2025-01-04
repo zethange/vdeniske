@@ -1,6 +1,6 @@
 # VDeniske
 
-![VDeniske logo](https://raw.githubusercontent.com/zethange/vdeniske/refs/heads/master/frontend/public/vdeniske-big-dark.svg)  
+![VDeniske logo](https://raw.githubusercontent.com/zethange/vdeniske/refs/heads/master/frontend/public/vdeniske.svg)
 A simple social media platform written in Rust/Axum and Solid.js.
 
 ## Features
